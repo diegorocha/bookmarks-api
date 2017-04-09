@@ -1,6 +1,6 @@
 module.exports = app => {
     const Bookmarks = app.db.models.Bookmarks;
-
+    const Users = app.db.models.Users;
     app.route("/bookmarks")
         .all(app.auth.authenticate())
         .get((req, res) => {
@@ -17,6 +17,25 @@ module.exports = app => {
                 .catch(error => {
                     res.status(400).json({message: error.message})
                 });
+        });
+
+    app.route("/bookmarks/all")
+        .all(app.auth.authenticate())
+        .get((req, res) => {
+            Users.findById(req.user.id)
+            .then(user => {
+                if(user.isAdmin){
+                    Users.findAll({attributes: ["id", "name", "email", "isAdmin"], include: [Bookmarks]})
+                    .then(result => {
+                        res.json(result);
+                    });
+                }else{
+                    res.sendStatus(400);
+                }
+            })
+            .catch(error => {
+                res.status(400).json({msg: error.message});
+            });
         });
 
     app.route("/bookmarks/:id")

@@ -5,6 +5,7 @@ describe("Routes: Bookmarks", () => {
     const Bookmarks = app.db.models.Bookmarks;
     const jwtSecret = app.libs.config.jwtSecret;
     let token;
+    let adminToken;
     let fakeBookmark;
 
     beforeEach(done => {
@@ -32,6 +33,15 @@ describe("Routes: Bookmarks", () => {
                     .then(bookmarks => {
                         fakeBookmark = bookmarks[0];
                         token = jwt.encode({id: user.id}, jwtSecret);
+                    })
+                    .then(() => Users.create({
+                        name: "Admin User",
+                        email: "admin@foo.com",
+                        isAdmin: true,
+                        password: "4dm1n"
+                    }))
+                    .then(user => {
+                        adminToken = jwt.encode({id: user.id}, jwtSecret);
                         done();
                     });
             });
@@ -111,6 +121,25 @@ describe("Routes: Bookmarks", () => {
                 request.delete(`/bookmarks/${fakeBookmark.id}`)
                     .set("Authorization", `JWT ${token}`)
                     .expect(204)
+                    .end((err, res) => done(err));
+            });
+        });
+    });
+
+    describe("GET /bookmarks/all", () => {
+        describe("status 200", () => {
+            it("admin gets a list of bookmarms grouped by user", done => {
+                request.get('/bookmarks/all')
+                    .set("Authorization", `JWT ${adminToken}`)
+                    .expect(200)
+                    .end((err, res) => done(err));
+            });
+        });
+        describe("status 400", () => {
+            it("not an admin gets error", done => {
+                request.get('/bookmarks/all')
+                    .set("Authorization", `JWT ${token}`)
+                    .expect(400)
                     .end((err, res) => done(err));
             });
         });
