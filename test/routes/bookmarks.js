@@ -55,7 +55,7 @@ describe("Routes: Bookmarks", () => {
 
     describe("POST /bookmarks", () => {
         describe("status 200", () => {
-            it("creates a new task", done => {
+            it("creates a new bookmarks", done => {
                 request.post("/bookmarks")
                     .set("Authorization", `JWT ${token}`)
                     .send({title: "Example", url: "http://example.com/"})
@@ -82,7 +82,7 @@ describe("Routes: Bookmarks", () => {
             });
         });
         describe("status 404", () => {
-            it("throws error when task not exist", done => {
+            it("throws error when bookmark not exist", done => {
                 request.get("/bookmarks/0")
                     .set("Authorization", `JWT ${token}`)
                     .expect(404)
@@ -93,7 +93,7 @@ describe("Routes: Bookmarks", () => {
 
     describe("PUT /bookmarks/:id", () => {
         describe("status 204", () => {
-            it("updates a task", done => {
+            it("updates a bookmark", done => {
                 request.put(`/bookmarks/${fakeBookmark.id}`)
                     .set("Authorization", `JWT ${token}`)
                     .send({
@@ -107,7 +107,7 @@ describe("Routes: Bookmarks", () => {
 
     describe("DELETE /bookmarks/:id", () => {
         describe("status 204", () => {
-            it("removes a task", done => {
+            it("removes a bookmark", done => {
                 request.delete(`/bookmarks/${fakeBookmark.id}`)
                     .set("Authorization", `JWT ${token}`)
                     .expect(204)
