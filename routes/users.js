@@ -23,13 +23,32 @@ module.exports = app => {
             .then(result => res.sendStatus(204))
             .catch(error => {
                 res.status(400).json({msg: error.message});
+            });
         });
-    });
-    app.post("/users", (req, res) => {
-        Users.create(req.body)
-        .then(result => res.json(result))
-        .catch(error => {
-            res.status(400).json({msg: error.message});
+    app.route("/users")
+        .post((req, res) => {
+            Users.create(req.body)
+            .then(result => res.json(result))
+            .catch(error => {
+                res.status(400).json({msg: error.message});
+            });
         });
-    });
+    app.route("/users/all")
+        .all(app.auth.authenticate())
+        .get((req, res) => {
+            Users.findById(req.user.id)
+            .then(user => {
+                if(user.isAdmin){
+                    Users.findAll({
+                        attributes: ["id", "name", "email", "isAdmin"]
+                    })
+                    .then(result => res.json(result));
+                }else{
+                    res.sendStatus(400);
+                }
+            })
+            .catch(error => {
+                res.status(400).json({msg: error.message});
+            });
+        });
 };
