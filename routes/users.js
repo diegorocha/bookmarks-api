@@ -4,7 +4,7 @@ module.exports = app => {
         .all(app.auth.authenticate())
         .get((req, res) => {
             Users.findById(req.user.id, {
-                attributes: ["id", "name", "email"]
+                attributes: ["id", "name", "email", "isAdmin"]
             })
             .then(result => res.json(result))
             .catch(error => {
