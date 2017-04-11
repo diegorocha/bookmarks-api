@@ -28,6 +28,17 @@ npm install
 npm start
 ```
 
+## Administrador
+
+Um detalhe importante é que o banco de dados vem vazio sem nenhum usuário. Ou seja, é preciso inserir um usuário com status de administrador diretamente no banco ou através de chamada da api.
+
+A aplicação cliente possui uma interface para cadastro de admins, mas ela só é acessível com a senha de um administrador.
+
+Para inserir um usuário administrador através da API
+```
+curl --request POST --url http://localhost:5000/users/ --header 'content-type: application/json' --data '{"name": "admin","email": "admin@admin.com", "password": "admin", "isAdmin": "true"}'
+```
+
 ## Testes
 
 Para executar os testes unitários basta rodar o comando test do npm
