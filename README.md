@@ -20,7 +20,7 @@ Me esforcei pra deixar a cobertura de testes minimamente decente, mas acredito q
 
 ## Instalação
 
-Para executar o projeto basta clonar o repositório.
+Para executar o projeto localmente basta clonar o repositório.
 
 Instalar as depências do node com o npm.
 ```shell
@@ -37,3 +37,14 @@ npm test
 ```
 
 Esse comando, além de chamar a suite de testes mocha, gera o relatório (na tela) da cobertura de testes.
+
+## Docker
+
+Para executar o projeto dentro de um container docker:
+
+```shell
+docker build -t bookmarks-api .
+docker run -p 5000:5000 -d bookmarks-api
+```
+
+O projeto estará disponível através de http://localhost:5000/ ou http://container-ip:5000/
